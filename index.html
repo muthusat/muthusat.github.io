@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name — Engineer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0a0a0a;
+      --paper: #f2efe8;
+      --accent: #c8412b;
+      --accent2: #1a3a5c;
+      --muted: #8a8070;
+      --rule: #d4cfc4;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'Instrument Sans', sans-serif;
+      --display: 'Bebas Neue', sans-serif;
+      --serif: 'DM Serif Display', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NOISE TEXTURE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 2.5rem;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+      mix-blend-mode: normal;
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 60px;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .hero-left {
+      padding: 6rem 3rem 4rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid var(--rule);
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-name {
+      font-family: var(--display);
+      font-size: clamp(5rem, 10vw, 9rem);
+      line-height: 0.92;
+      letter-spacing: 0.01em;
+      color: var(--ink);
+      margin-bottom: 2rem;
+    }
+
+    .hero-name span { color: var(--accent); }
+
+    .hero-tagline {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.35rem;
+      color: var(--muted);
+      max-width: 380px;
+      line-height: 1.5;
+    }
+
+    .hero-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .hero-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+
+    .hero-stat-num {
+      font-family: var(--display);
+      font-size: 2.8rem;
+      color: var(--accent2);
+      line-height: 1;
+    }
+
+    .hero-stat-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hero-right {
+      padding: 6rem 2.5rem 4rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-big-text {
+      position: absolute;
+      top: 50%;
+      left: -0.05em;
+      transform: translateY(-50%);
+      font-family: var(--display);
+      font-size: clamp(8rem, 18vw, 16rem);
+      color: transparent;
+      -webkit-text-stroke: 1px var(--rule);
+      line-height: 1;
+      pointer-events: none;
+      white-space: nowrap;
+      opacity: 0.7;
+    }
+
+    .hero-desc {
+      position: relative;
+      z-index: 2;
+      font-size: 0.97rem;
+      line-height: 1.75;
+      color: var(--ink);
+      max-width: 420px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.85rem 1.8rem;
+      border: 1.5px solid var(--ink);
+      color: var(--ink);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+
+    .btn:hover { background: var(--ink); color: var(--paper); }
+    .btn-fill { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+    .btn-fill:hover { background: var(--ink); border-color: var(--ink); }
+
+    /* SECTION LAYOUT */
+    section {
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      padding: 2rem 2.5rem 1.5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section-num {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      letter-spacing: 0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    /* RESUME */
+    #resume .resume-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .resume-col {
+      padding: 3rem 2.5rem;
+    }
+
+    .resume-col:first-child {
+      border-right: 1px solid var(--rule);
+    }
+
+    .resume-block {
+      margin-bottom: 3rem;
+    }
+
+    .resume-block-title {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .resume-item {
+      margin-bottom: 1.8rem;
+      padding-bottom: 1.8rem;
+      border-bottom: 1px dashed var(--rule);
+    }
+
+    .resume-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .resume-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.3rem;
+      gap: 1rem;
+    }
+
+    .resume-role {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      color: var(--ink);
+    }
+
+    .resume-date {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      padding-top: 0.25rem;
+    }
+
+    .resume-company {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent2);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.6rem;
+    }
+
+    .resume-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .skill-tag {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      padding: 0.4rem 0.85rem;
+      border: 1px solid var(--rule);
+      color: var(--ink);
+      background: transparent;
+      transition: all 0.2s;
+    }
+
+    .skill-tag:hover {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    .resume-download-row {
+      padding: 1.5rem 2.5rem;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* BLOG */
+    #blog .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .blog-card {
+      padding: 2.5rem;
+      border-right: 1px solid var(--rule);
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .blog-card:last-child { border-right: none; }
+    .blog-card:hover { background: rgba(10,10,10,0.03); }
+
+    .blog-card-num {
+      font-family: var(--display);
+      font-size: 3.5rem;
+      color: var(--rule);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .blog-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .blog-card-title {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: 0.85rem;
+      flex: 1;
+    }
+
+    .blog-card-excerpt {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .blog-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .blog-read-more {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 1px;
+      transition: opacity 0.2s;
+    }
+
+    .blog-read-more:hover { opacity: 0.7; }
+
+    /* PHOTO ALBUMS */
+    #photos .albums-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .album {
+      border-right: 1px solid var(--rule);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .album:last-child { border-right: none; }
+
+    .album-cover {
+      width: 100%;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .album-cover-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      height: 100%;
+      gap: 2px;
+    }
+
+    .album-thumb {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .album-thumb:first-child {
+      grid-row: span 2;
+    }
+
+    .album-thumb-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+      display: block;
+    }
+
+    .album:hover .album-thumb-img { transform: scale(1.05); }
+
+    /* Placeholder colored blocks for demo thumbnails */
+    .ph {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.1em;
+    }
+
+    .album-info {
+      padding: 1.5rem 2rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .album-name {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      color: var(--ink);
+      margin-bottom: 0.3rem;
+    }
+
+    .album-meta {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* LIGHTBOX */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,10,0.95);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 2rem;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem; right: 2rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--paper);
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.5rem 1rem;
+      transition: background 0.2s;
+    }
+
+    .lightbox-close:hover { background: rgba(255,255,255,0.1); }
+
+    .lightbox-title {
+      font-family: var(--display);
+      font-size: 2.5rem;
+      color: var(--paper);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.04em;
+    }
+
+    .lightbox-subtitle {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.15em;
+      margin-bottom: 2rem;
+    }
+
+    .lightbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 6px;
+      width: 100%;
+      max-width: 1000px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .lightbox-photo {
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+
+    .lightbox-photo .ph {
+      font-size: 0.55rem;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 3rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-name {
+      font-family: var(--display);
+      font-size: 1.8rem;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--rule);
+      letter-spacing: 0.1em;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+    .hero-name    { animation: fadeUp 0.7s 0.1s ease both; }
+    .hero-tagline { animation: fadeUp 0.7s 0.2s ease both; }
+    .hero-bottom  { animation: fadeUp 0.7s 0.3s ease both; }
+    .hero-desc    { animation: fadeUp 0.7s 0.15s ease both; }
+    .hero-cta-row { animation: fadeUp 0.7s 0.3s ease both; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      #resume .resume-grid { grid-template-columns: 1fr; }
+      .resume-col:first-child { border-right: none; border-bottom: 1px solid var(--rule); }
+      #blog .blog-grid { grid-template-columns: 1fr; }
+      .blog-card { border-right: none; border-bottom: 1px solid var(--rule); }
+      #photos .albums-row { grid-template-columns: 1fr; }
+      .album { border-right: none; border-bottom: 1px solid var(--rule); }
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">YourName.dev</a>
+    <ul class="nav-links">
+      <li><a href="#resume">Resume</a></li>
+      <li><a href="#blog">Writing</a></li>
+      <li><a href="#photos">Photos</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-left">
+      <div>
+        <p class="hero-eyebrow">Software Engineer — Available for Work</p>
+        <h1 class="hero-name">YOUR<br><span>NAME</span></h1>
+        <p class="hero-tagline">Building systems that scale, interfaces that delight, and code that endures.</p>
+      </div>
+      <div class="hero-bottom">
+        <div class="hero-stat">
+          <span class="hero-stat-num">7+</span>
+          <span class="hero-stat-label">Years of experience</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">40+</span>
+          <span class="hero-stat-label">Projects shipped</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">3</span>
+          <span class="hero-stat-label">Open source libs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-big-text">ENG</div>
+      <p class="hero-desc">
+        I'm a full-stack engineer with a passion for distributed systems, developer tooling, and clean abstractions. 
+        I've built infrastructure for Fortune 500 companies and scrappy startups alike. 
+        Currently exploring the intersection of AI and systems design.
+      </p>
+      <div class="hero-cta-row">
+        <a href="#resume" class="btn btn-fill">View Resume</a>
+        <a href="mailto:you@example.com" class="btn">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESUME -->
+  <section id="resume">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Resume</h2>
+    </div>
+    <div class="resume-grid">
+      <div class="resume-col">
+
+        <div class="resume-block">
+          <p class="resume-block-title">Experience</p>
+
+          <div class="resume-item">
+            <div class="resume-item-header">
+              <span class="resume-role">Senior Software Engineer</span>
+              <span class="resume-date">2022 — Present</span>
+            </div>
+            <p class="resume-company">ACME CORP · San Francisco, CA</p>
+            <p class="resume-desc">Led a team of 5 engineers to redesign the core data pipeline, reducing latency by 60%. Architected a microservices migration from a 10-year-old monolith.</p>
+          </div>
+
+          <div class="resume-item">
+            <div class="resume-item-header">
+              <span class="resume-role">Software Engineer II</span>
+              <span class="resume-date">2019 — 2022</span>
+            </div>
+            <p class="resume-company">STARTUP XYZ · Remote</p>
+            <p class="resume-desc">Owned the payments infrastructure serving 2M+ users. Built real-time alerting and observability systems from scratch using Kafka and Grafana.</p>
+          </div>
+
+          <div class="resume-item">
+            <div class="resume-item-header">
+              <span class="resume-role">Junior Developer</span>
+              <span class="resume-date">2017 — 2019</span>
+            </div>
+            <p class="resume-company">AGENCY CO · New York, NY</p>
+            <p class="resume-desc">Developed full-stack web applications for clients across e-commerce, media, and fintech verticals using React and Node.js.</p>
+          </div>
+        </div>
+
+        <div class="resume-block">
+          <p class="resume-block-title">Education</p>
+          <div class="resume-item">
+            <div class="resume-item-header">
+              <span class="resume-role">B.S. Computer Science</span>
+              <span class="resume-date">2013 — 2017</span>
+            </div>
+            <p class="resume-company">STATE UNIVERSITY</p>
+            <p class="resume-desc">Concentration in Systems & Networks. Dean's List. Senior thesis on distributed consensus algorithms.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="resume-col">
+
+        <div class="resume-block">
+          <p class="resume-block-title">Technical Skills</p>
+          <div class="skills-grid">
+            <span class="skill-tag">TypeScript</span>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Go</span>
+            <span class="skill-tag">Rust</span>
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">PostgreSQL</span>
+            <span class="skill-tag">Redis</span>
+            <span class="skill-tag">Kafka</span>
+            <span class="skill-tag">Kubernetes</span>
+            <span class="skill-tag">AWS</span>
+            <span class="skill-tag">Terraform</span>
+            <span class="skill-tag">Docker</span>
+            <span class="skill-tag">GraphQL</span>
+            <span class="skill-tag">gRPC</span>
+          </div>
+        </div>
+
+        <div class="resume-block">
+          <p class="resume-block-title">Projects</p>
+
+          <div class="resume-item">
+            <div class="resume-item-header">
+              <span class="resume-role">OpenTrace</span>
+            </div>
+            <p class="resume-company">OPEN SOURCE · 1.2K GitHub Stars</p>
+            <p class="resume-desc">A lightweight distributed tracing library for Node.js microservices with zero config setup.</p>
+          </div>
+
+          <div class="resume-item">
+            <div class="resume-item-header">
+              <span class="resume-role">GridDB</span>
+            </div>
+            <p class="resume-company">OPEN SOURCE</p>
+            <p class="resume-desc">An in-memory key-value store with a Redis-compatible API written in Go, focusing on simplicity and performance.</p>
+          </div>
+        </div>
+
+        <div class="resume-block">
+          <p class="resume-block-title">Certifications</p>
+          <div class="resume-item">
+            <div class="resume-item-header">
+              <span class="resume-role">AWS Solutions Architect</span>
+              <span class="resume-date">2023</span>
+            </div>
+          </div>
+          <div class="resume-item">
+            <div class="resume-item-header">
+              <span class="resume-role">Certified Kubernetes Admin</span>
+              <span class="resume-date">2022</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="resume-download-row">
+      <a href="#" class="btn">↓ Download PDF Resume</a>
+      <span style="font-family:var(--mono);font-size:0.68rem;color:var(--muted);letter-spacing:0.08em;">Last updated April 2026</span>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <section id="blog">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Writing</h2>
+    </div>
+    <div class="blog-grid">
+
+      <div class="blog-card">
+        <div class="blog-card-num">01</div>
+        <p class="blog-tag">Systems Design</p>
+        <h3 class="blog-card-title">Why I Stopped Using ORMs for Anything Serious</h3>
+        <p class="blog-card-excerpt">After five years of fighting query optimizers and fighting N+1 bugs, I went back to raw SQL. Here's what I learned and why I'm not going back.</p>
+        <div class="blog-card-footer">
+          <span>Mar 28, 2026 · 8 min read</span>
+          <a href="#" class="blog-read-more">Read →</a>
+        </div>
+      </div>
+
+      <div class="blog-card">
+        <div class="blog-card-num">02</div>
+        <p class="blog-tag">Career</p>
+        <h3 class="blog-card-title">The Staff Engineer Interview Nobody Warned Me About</h3>
+        <p class="blog-card-excerpt">Promoted from senior to staff? The technical bar barely changes. The system design and leadership expectations shift entirely. A candid debrief.</p>
+        <div class="blog-card-footer">
+          <span>Feb 14, 2026 · 6 min read</span>
+          <a href="#" class="blog-read-more">Read →</a>
+        </div>
+      </div>
+
+      <div class="blog-card">
+        <div class="blog-card-num">03</div>
+        <p class="blog-tag">Tooling</p>
+        <h3 class="blog-card-title">Building a Local-First Dev Environment with Nix Flakes</h3>
+        <p class="blog-card-excerpt">Reproducible, declarative, works on every machine. I rebuilt my entire dev setup with Nix and I'll never go back to dotfiles hell again.</p>
+        <div class="blog-card-footer">
+          <span>Jan 05, 2026 · 12 min read</span>
+          <a href="#" class="blog-read-more">Read →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PHOTOS -->
+  <section id="photos">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Photos</h2>
+    </div>
+    <div class="albums-row">
+
+      <div class="album" onclick="openAlbum('Japan 2025', '12 Photos', ['#8B7355','#A0896E','#6B5D4A','#9E8B74','#7A6B55','#B09880','#6B5D4A','#A0896E','#8B7355','#9E8B74','#7A6B55','#B09880'])">
+        <div class="album-cover">
+          <div class="album-cover-grid">
+            <div class="album-thumb"><div class="ph" style="background:#8B7355;">JPG</div></div>
+            <div class="album-thumb"><div class="ph" style="background:#A0896E;">JPG</div></div>
+            <div class="album-thumb"><div class="ph" style="background:#6B5D4A;">JPG</div></div>
+          </div>
+        </div>
+        <div class="album-info">
+          <p class="album-name">Japan 2025</p>
+          <div class="album-meta"><span>Tokyo · Kyoto · Osaka</span><span>12 Photos</span></div>
+        </div>
+      </div>
+
+      <div class="album" onclick="openAlbum('Pacific Coast Trail', '28 Photos', ['#4a6741','#5a7a51','#3d5435','#6b8f60','#4a6741','#5a7a51','#3d5435','#6b8f60','#4a6741','#5a7a51','#3d5435','#6b8f60'])">
+        <div class="album-cover">
+          <div class="album-cover-grid">
+            <div class="album-thumb"><div class="ph" style="background:#4a6741;">JPG</div></div>
+            <div class="album-thumb"><div class="ph" style="background:#5a7a51;">JPG</div></div>
+            <div class="album-thumb"><div class="ph" style="background:#3d5435;">JPG</div></div>
+          </div>
+        </div>
+        <div class="album-info">
+          <p class="album-name">Pacific Coast Trail</p>
+          <div class="album-meta"><span>Oregon · California</span><span>28 Photos</span></div>
+        </div>
+      </div>
+
+      <div class="album" onclick="openAlbum('Film Shots — 2024', '9 Photos', ['#1a1a2e','#16213e','#0f3460','#533483','#1a1a2e','#16213e','#0f3460','#533483','#1a1a2e'])">
+        <div class="album-cover">
+          <div class="album-cover-grid">
+            <div class="album-thumb"><div class="ph" style="background:#1a1a2e;">JPG</div></div>
+            <div class="album-thumb"><div class="ph" style="background:#16213e;">JPG</div></div>
+            <div class="album-thumb"><div class="ph" style="background:#0f3460;">JPG</div></div>
+          </div>
+        </div>
+        <div class="album-info">
+          <p class="album-name">Film Shots — 2024</p>
+          <div class="album-meta"><span>35mm Analog</span><span>9 Photos</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-name">YOUR NAME</span>
+    <ul class="footer-links">
+      <li><a href="https://github.com" target="_blank">GitHub</a></li>
+      <li><a href="https://linkedin.com" target="_blank">LinkedIn</a></li>
+      <li><a href="https://twitter.com" target="_blank">Twitter</a></li>
+      <li><a href="mailto:you@example.com">Email</a></li>
+    </ul>
+    <span class="footer-copy">© 2026 — Built with care</span>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-close" onclick="closeLightbox()">✕ Close</div>
+    <p class="lightbox-title" id="lb-title"></p>
+    <p class="lightbox-subtitle" id="lb-subtitle"></p>
+    <div class="lightbox-grid" id="lb-grid"></div>
+  </div>
+
+  <script>
+    function openAlbum(name, count, colors) {
+      document.getElementById('lb-title').textContent = name;
+      document.getElementById('lb-subtitle').textContent = count + ' — Click an image to view';
+      const grid = document.getElementById('lb-grid');
+      grid.innerHTML = '';
+      colors.forEach((c, i) => {
+        const div = document.createElement('div');
+        div.className = 'lightbox-photo';
+        div.innerHTML = `<div class="ph" style="background:${c};">Photo ${i+1}</div>`;
+        grid.appendChild(div);
+      });
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+      if (e.target === this) closeLightbox();
+    });
+  </script>
+</body>
+</html>
